@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     marginBottom: 20,
-    paddingHorizontal: 10,
+    margin: 6
   },
   errorText: {
     color: 'red',

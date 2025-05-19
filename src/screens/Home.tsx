@@ -22,7 +22,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import { RootStackParamList } from '../../App';
 import { useAuth } from '../context/AuthContext';
 
-
 interface Task {
     _id: string;
     title: string;
@@ -46,7 +45,6 @@ const Home = () => {
     type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
     const navigation = useNavigation<NavigationProp>();
     const { logout } = useAuth();
-
 
     useEffect(() => {
         const unsubscribe = NetInfo.addEventListener(state => {
@@ -124,7 +122,9 @@ const Home = () => {
         if (!editText.trim() || !editingTask) return;
         try {
             const res = await api.put(`/tasks/${editingTask._id}`, { title: editText });
-            setTasks(prev => prev.map(t => (t._id === editingTask._id ? res.data : t)));
+            setTasks(prev =>
+                prev.map(t => (t._id === editingTask._id ? res.data : t)),
+            );
             setEditingTask(null);
             setEditText('');
         } catch {
@@ -133,27 +133,25 @@ const Home = () => {
     };
 
     const handleLogout = () => {
-        Alert.alert(
-            'Logout',
-            'Are you sure you want to logout?',
-            [
-                { text: 'Cancel', style: 'cancel' },
-                {
-                    text: 'Logout',
-                    style: 'destructive',
-                    onPress: async () => {
-                        try {
-                            await logout();
-                        } catch {
-                            Alert.alert('Error', 'Failed to log out');
-                        }
+        Alert.alert('Logout', 'Are you sure you want to logout?', [
+            { text: 'Cancel', style: 'cancel' },
+            {
+                text: 'Logout',
+                style: 'destructive',
+                onPress: async () => {
+                    try {
+                        await logout();
+                    } catch {
+                        Alert.alert('Error', 'Failed to log out');
                     }
-                }
-            ]
-        );
+                },
+            },
+        ]);
     };
     const renderRightActions = (id: string) => (
-        <TouchableOpacity onPress={ () => handleDeleteTask(id) } style={ styles.deleteSwipe }>
+        <TouchableOpacity
+            onPress={ () => handleDeleteTask(id) }
+            style={ styles.deleteSwipe }>
             <Text style={ { color: 'white' } }>Delete</Text>
         </TouchableOpacity>
     );
@@ -164,24 +162,28 @@ const Home = () => {
                 <TouchableOpacity
                     onPress={ () => toggleTaskDone(item._id) }
                     style={ { flex: 1 } }
-                    accessibilityLabel={ `Mark task ${item.title} as done` }
-                >
+                    accessibilityLabel={ `Mark task ${item.title} as done` }>
                     <Text
                         style={ [
                             styles.taskText,
-                            item.completed && { textDecorationLine: 'line-through', color: '#999' },
+                            item.completed && {
+                                textDecorationLine: 'line-through',
+                                color: '#999',
+                            },
                             isDarkMode && { color: '#ccc' },
-                        ] }
-                    >
+                        ] }>
                         { item.title }
                     </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={ () => handleStartEdit(item) }
                     style={ styles.iconButton }
-                    accessibilityLabel={ `Edit task ${item.title}` }
-                >
-                    <FontAwesome6 name="pen" iconStyle="solid" color={ isDarkMode ? '#ccc' : '#000' } />
+                    accessibilityLabel={ `Edit task ${item.title}` }>
+                    <FontAwesome6
+                        name="pen"
+                        iconStyle="solid"
+                        color={ isDarkMode ? '#ccc' : '#000' }
+                    />
                 </TouchableOpacity>
             </View>
         </Swipeable>
@@ -196,18 +198,45 @@ const Home = () => {
     return (
         <KeyboardAvoidingView
             behavior={ Platform.OS === 'ios' ? 'padding' : undefined }
-            style={ [styles.container, isDarkMode && styles.containerDark] }
-        >
+            style={ [styles.container, isDarkMode && styles.containerDark] }>
             <View style={ styles.topHeader }>
-                <Text style={ [styles.header, isDarkMode && styles.headerDark] }>📝 My Todo List</Text>
+                <Text style={ [styles.header, isDarkMode && styles.headerDark] }>
+                    📝 My Todo List
+                </Text>
 
                 <View style={ { flexDirection: 'row', alignItems: 'center' } }>
-                    <TouchableOpacity onPress={ () => setIsDarkMode(prev => !prev) } style={ styles.themeToggle }>
-                        <Text style={ { fontSize: 22 } }>{ isDarkMode ? '🌞' : '🌙' }</Text>
+                    <TouchableOpacity
+                        onPress={ () => setIsDarkMode(prev => !prev) }
+                        style={ styles.themeToggle }>
+                        <Text style={ { fontSize: 22 } }>
+                            { isDarkMode ? (
+                                <FontAwesome6
+                                    name="lightbulb"
+                                    iconStyle="solid"
+                                    size={ 22 }
+                                    color={ isDarkMode ? '#ccc' : '#000' }
+                                />
+                            ) : (
+                                <FontAwesome6
+                                    name="lightbulb"
+                                    iconStyle="regular"
+                                    size={ 22 }
+                                    color={ isDarkMode ? '#ccc' : '#000' }
+                                />
+                            ) }
+                        </Text>
                     </TouchableOpacity>
 
-                    <TouchableOpacity onPress={ handleLogout } style={ [styles.button, { marginLeft: 10 }] }>
-                        <Text style={ styles.buttonText }>Logout</Text>
+                    <TouchableOpacity
+                        onPress={ handleLogout }
+                        style={ { marginLeft: 15 } }
+                        accessibilityLabel="Logout">
+                        <FontAwesome6
+                            name="right-from-bracket"
+                            iconStyle="solid"
+                            size={ 22 }
+                            color={ isDarkMode ? '#ccc' : '#000' }
+                        />
                     </TouchableOpacity>
                 </View>
             </View>
@@ -227,7 +256,12 @@ const Home = () => {
                 </TouchableOpacity>
             </View>
 
-            <View style={ { flexDirection: 'row', justifyContent: 'center', marginVertical: 10 } }>
+            <View
+                style={ {
+                    flexDirection: 'row',
+                    justifyContent: 'center',
+                    marginVertical: 10,
+                } }>
                 { ['all', 'active', 'completed'].map(type => (
                     <TouchableOpacity
                         key={ type }
@@ -237,9 +271,9 @@ const Home = () => {
                             filter === type && styles.filterButtonActive,
                             isDarkMode && styles.filterButtonDark,
                             isDarkMode && filter === type && styles.filterButtonActiveDark,
-                        ] }
-                    >
-                        <Text style={ [styles.filterText, isDarkMode && styles.filterTextDark] }>
+                        ] }>
+                        <Text
+                            style={ [styles.filterText, isDarkMode && styles.filterTextDark] }>
                             { type.charAt(0).toUpperCase() + type.slice(1) }
                         </Text>
                     </TouchableOpacity>
@@ -247,7 +281,11 @@ const Home = () => {
             </View>
 
             { loading ? (
-                <ActivityIndicator size="large" color="#0066cc" style={ { marginTop: 30 } } />
+                <ActivityIndicator
+                    size="large"
+                    color="#0066cc"
+                    style={ { marginTop: 30 } }
+                />
             ) : !networkAvailable ? (
                 <Text style={ styles.error }>📴 No network connection</Text>
             ) : (
@@ -258,7 +296,9 @@ const Home = () => {
                     contentContainerStyle={ styles.taskList }
                     refreshing={ refreshing }
                     onRefresh={ onRefresh }
-                    ListEmptyComponent={ <Text style={ styles.noTasks }>🎉 No tasks to show</Text> }
+                    ListEmptyComponent={
+                        <Text style={ styles.noTasks }>🎉 No tasks to show</Text>
+                    }
                 />
             ) }
 
@@ -275,11 +315,16 @@ const Home = () => {
                             accessibilityLabel="Edit task input"
                             onSubmitEditing={ handleConfirmEdit }
                         />
-                        <View style={ { flexDirection: 'row', justifyContent: 'space-between' } }>
-                            <TouchableOpacity onPress={ () => setEditingTask(null) } style={ styles.button }>
+                        <View
+                            style={ { flexDirection: 'row', justifyContent: 'space-between' } }>
+                            <TouchableOpacity
+                                onPress={ () => setEditingTask(null) }
+                                style={ styles.button }>
                                 <Text style={ styles.buttonText }>Cancel</Text>
                             </TouchableOpacity>
-                            <TouchableOpacity onPress={ handleConfirmEdit } style={ styles.button }>
+                            <TouchableOpacity
+                                onPress={ handleConfirmEdit }
+                                style={ styles.button }>
                                 <Text style={ styles.buttonText }>Update</Text>
                             </TouchableOpacity>
                         </View>

@@ -1,4 +1,3 @@
-// src/contexts/AuthContext.tsx
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -22,9 +21,17 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         const loadToken = async () => {
-            const token = await AsyncStorage.getItem('token');
-            setUserToken(token);
-            setIsLoading(false);
+            try {
+                // 🔥 Simulate delay
+                await new Promise(resolve => setTimeout(resolve, 1500));
+
+                const token = await AsyncStorage.getItem('token');
+                setUserToken(token);
+            } catch (error) {
+                console.error('Failed to load token', error);
+            } finally {
+                setIsLoading(false);
+            }
         };
 
         loadToken();
