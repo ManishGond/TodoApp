@@ -37,7 +37,6 @@ const AppNavigator = () => {
   );
 };
 
-// ✅ Handles auth loading & splash hiding
 const AppWithAuth = () => {
   const { isLoading } = useAuth();
 

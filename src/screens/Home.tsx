@@ -283,8 +283,8 @@ const Home = () => {
             { loading ? (
                 <ActivityIndicator
                     size="large"
-                    color="#0066cc"
-                    style={ { marginTop: 30 } }
+                    color="#fff"
+                    style={ { marginTop: 60 } }
                 />
             ) : !networkAvailable ? (
                 <Text style={ styles.error }>📴 No network connection</Text>
