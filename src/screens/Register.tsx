@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Text, TouchableOpacity, Alert } from 'react-native';
+import React, { useCallback, useMemo, useState } from 'react';
+import { Text, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Animated, { FadeInDown } from 'react-native-reanimated';
 import styles from '../utils/styles';
@@ -7,11 +7,27 @@ import api from '../utils/api';
 import AuthForm from '../components/AuthForm';
 import { useAuth } from '../context/AuthContext';
 import FullScreenLoader from '../components/FullScreenLoader';
+import { useFocusEffect } from '@react-navigation/native';
+
+const backgroundImages = [
+    require('../assets/bg-1.png'),
+    require('../assets/bg-2.png'),
+    require('../assets/bg-3.png'),
+    require('../assets/bg-7.png'),
+    require('../assets/bg-4.png'),
+    require('../assets/bg-5.png'),
+    require('../assets/bg-6.png'),
+    require('../assets/bg-8.png'),
+];
+const getRandomBackground = () => {
+    const index = Math.floor(Math.random() * backgroundImages.length);
+    return backgroundImages[index];
+};
 
 const Register = ({ navigation }: any) => {
     const { login } = useAuth();
     const [isLoading, setIsLoading] = useState(false);
-
+    const [backgroundImage, setBackgroundImage] = useState(getRandomBackground());
     const handleRegister = async (values: { email: string; password: string }) => {
         setIsLoading(true);
 
@@ -20,7 +36,7 @@ const Register = ({ navigation }: any) => {
 
             if (res.data?.token && res.data?.userId) {
                 await AsyncStorage.setItem('userId', res.data.userId);
-                await login(res.data.token);
+                await login(res.data.token, res.data.email);
             } else {
                 throw new Error('Invalid response from server');
             }
@@ -35,20 +51,32 @@ const Register = ({ navigation }: any) => {
         }
     };
 
+    useFocusEffect(
+        useCallback(() => {
+            setBackgroundImage(getRandomBackground());
+        }, [])
+    );
+
     return (
-        <Animated.View entering={ FadeInDown.duration(600) } style={ styles.authContainer }>
-            <Animated.View style={ styles.authCard }>
-                <Text style={ styles.authHeader }>Register</Text>
+        <ImageBackground
+            source={ backgroundImage }
+            style={ { flex: 1, justifyContent: 'center', alignContent: 'center', } }
+            resizeMode="cover"
+        >
+            <Animated.View entering={ FadeInDown.duration(600) } style={ styles.authContainer }>
+                <Animated.View style={ styles.authCard }>
+                    <Text style={ styles.authHeader }>Register</Text>
 
-                <AuthForm type="register" onSubmit={ handleRegister } />
+                    <AuthForm type="register" onSubmit={ handleRegister } />
 
-                <TouchableOpacity onPress={ () => navigation.navigate('Login') }>
-                    <Text style={ styles.switchAuthText }>Already have an account? Log in</Text>
-                </TouchableOpacity>
+                    <TouchableOpacity onPress={ () => navigation.navigate('Login') }>
+                        <Text style={ styles.switchAuthText }>Already have an account? Log in</Text>
+                    </TouchableOpacity>
+                </Animated.View>
+
+                { isLoading && <FullScreenLoader /> }
             </Animated.View>
-
-            { isLoading && <FullScreenLoader /> }
-        </Animated.View>
+        </ImageBackground>
     );
 };
 

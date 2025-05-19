@@ -16,7 +16,7 @@ const styles = StyleSheet.create({
         left: 0,
         right: 0,
         bottom: 0,
-        backgroundColor: '#110d29',
+        backgroundColor: 'rgba(17, 13, 41, 0.6)', // 60% opacity
         justifyContent: 'center',
         alignItems: 'center',
         zIndex: 10,
