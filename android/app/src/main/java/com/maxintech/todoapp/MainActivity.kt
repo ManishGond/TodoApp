@@ -1,4 +1,4 @@
-package com.todoapp
+package com.maxintech.todoapp
 
 import android.os.Bundle
 import com.facebook.react.ReactActivity

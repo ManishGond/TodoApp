@@ -409,7 +409,7 @@ const Home = () => {
                 <Text style={ styles.error }>📴 No network connection...</Text>
             ) : (
                 <FlatList
-                    data={ filteredTasks }
+                    data={ [...filteredTasks].reverse() }
                     renderItem={ renderItem }
                     keyExtractor={ item => item._id }
                     contentContainerStyle={ styles.taskList }
@@ -450,6 +450,13 @@ const Home = () => {
                     </View>
                 </View>
             </Modal>
+            <View style={ { alignItems: 'center', marginBottom: 1 } }>
+                <Text style={ { fontSize: 12, color: isDarkMode ? '#888' : '#444' } }>
+                    Crafted with <Text style={ { color: 'red' } }>❤️</Text> by{ ' ' }
+                    <Text style={ { fontWeight: 'bold', color: 'white' } }>Maxin</Text>
+                </Text>
+            </View>
+
         </KeyboardAvoidingView>
     );
 };
