@@ -1,5 +1,5 @@
-import React, { useCallback, useMemo, useState } from 'react';
-import { Text, TouchableOpacity, Alert, StyleSheet, ImageBackground } from 'react-native';
+import React, { useCallback, useEffect, useState } from 'react';
+import { Text, TouchableOpacity, Alert, ImageBackground } from 'react-native';
 import styles from '../utils/styles';
 import api from '../utils/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -8,6 +8,7 @@ import Animated, { FadeInDown } from 'react-native-reanimated';
 import { useAuth } from '../context/AuthContext';
 import FullScreenLoader from '../components/FullScreenLoader';
 import { useFocusEffect } from '@react-navigation/native';
+import PushNotification from 'react-native-push-notification';
 
 const backgroundImages = [
     require('../assets/bg-4.png'),
@@ -41,7 +42,10 @@ const Login = ({ navigation }: any) => {
             }
         } catch (err: any) {
             console.error('Login error:', err.response?.data || err.message);
-            Alert.alert('Login Failed', err.response?.data?.error || 'Invalid credentials or server error.');
+            Alert.alert(
+                'Login Failed',
+                err.response?.data?.error || 'Invalid credentials or server error.',
+            );
         } finally {
             setIsLoading(false);
         }
@@ -51,21 +55,38 @@ const Login = ({ navigation }: any) => {
     useFocusEffect(
         useCallback(() => {
             setBackgroundImage(getRandomBackground());
-        }, [])
+        }, []),
     );
+
+    useEffect(() => {
+        createChannels();
+    }, []);
+
+    const createChannels = () => {
+        PushNotification.createChannel(
+            {
+                channelId: 'todo-channel',
+                channelName: 'Todo Channel',
+            },
+            created => console.log(`createChannel (1) returned '${created}'`),
+        );
+    };
 
     return (
         <ImageBackground
             source={ backgroundImage }
-            style={ { flex: 1, justifyContent: 'center', alignContent: 'center', } }
-            resizeMode="cover"
-        >
-            <Animated.View entering={ FadeInDown.duration(600) } style={ styles.authContainer }>
+            style={ { flex: 1, justifyContent: 'center', alignContent: 'center' } }
+            resizeMode="cover">
+            <Animated.View
+                entering={ FadeInDown.duration(600) }
+                style={ styles.authContainer }>
                 <Animated.View style={ styles.authCard }>
                     <Text style={ styles.authHeader }>Login</Text>
                     <AuthForm type="login" onSubmit={ handleLogin } />
                     <TouchableOpacity onPress={ () => navigation.navigate('Register') }>
-                        <Text style={ styles.switchAuthText }>Don't have an account? Register</Text>
+                        <Text style={ styles.switchAuthText }>
+                            Don't have an account? Register
+                        </Text>
                     </TouchableOpacity>
                 </Animated.View>
                 { isLoading && <FullScreenLoader /> }

@@ -18,9 +18,8 @@ import api from '../utils/api';
 import NetInfo from '@react-native-community/netinfo';
 import styles from '../utils/styles';
 import { Swipeable } from 'react-native-gesture-handler';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { RootStackParamList } from '../../App';
 import { useAuth } from '../context/AuthContext';
+import PushNotification from 'react-native-push-notification';
 
 interface Task {
     _id: string;
@@ -42,9 +41,6 @@ const Home = () => {
     const [isDarkMode, setIsDarkMode] = useState(true);
     const [filter, setFilter] = useState<'all' | 'active' | 'completed'>('all');
     const [nameColor, setNameColor] = useState('#007AFF');
-
-
-    type NavigationProp = NativeStackNavigationProp<RootStackParamList, 'Home'>;
     const { logout, userEmail } = useAuth();
 
     useEffect(() => {
@@ -113,16 +109,71 @@ const Home = () => {
         }
     };
 
+    const getNextTriggerTime = (hour: number, minute: number) => {
+        const now = new Date();
+        const trigger = new Date();
+        trigger.setHours(hour);
+        trigger.setMinutes(minute);
+        trigger.setSeconds(0);
+
+        if (trigger <= now) {
+            trigger.setDate(trigger.getDate() + 1);
+        }
+
+        return trigger;
+    };
+    const scheduleDailyNotifications = async () => {
+        try {
+            const res = await api.get('/tasks');
+            const tasks = res.data;
+
+            const hasPendingTasks = tasks.some((task: Task) => !task.completed);
+
+            if (hasPendingTasks) {
+                const times = [
+                    { hour: 8, minute: 30 },
+                    { hour: 17, minute: 0 },
+                    { hour: 19, minute: 50 },
+                ];
+
+                times.forEach(({ hour, minute }) => {
+                    PushNotification.localNotificationSchedule({
+                        channelId: "todo-channel",
+                        title: "📝 Task Reminder",
+                        message: "You may have some tasks pending. Don't forget to check!",
+                        date: getNextTriggerTime(hour, minute),
+                        allowWhileIdle: true,
+                        repeatType: "day",
+                    });
+                });
+            } else {
+                PushNotification.cancelAllLocalNotifications();
+            }
+        } catch (err) {
+            console.error('Failed to fetch tasks or schedule notifications:', err);
+        }
+    };
     const handleAddTask = async () => {
         if (!newTask.trim()) return;
         try {
             const res = await api.post('/tasks', { title: newTask, completed: false });
             setTasks(prev => [...prev, res.data]);
             setNewTask('');
+            handleNotification()
+            await scheduleDailyNotifications();
         } catch {
             Alert.alert('Error', 'Failed to add task');
         }
     };
+
+    const handleNotification = () => {
+        PushNotification.cancelAllLocalNotifications()
+        PushNotification.localNotification({
+            channelId: 'todo-channel',
+            title: 'Added new task ✅',
+            message: 'A new task has been added to your to-do list. Click to find out.'
+        })
+    }
 
     const handleDeleteTask = async (id: string) => {
         try {
