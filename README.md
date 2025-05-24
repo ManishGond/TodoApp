@@ -1,97 +1,63 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# 🐱 Todo App
 
-# Getting Started
+Organize your life, one purr at a time.  
+**Todo App** is a fun and functional productivity app built for people who love cats *and* staying on top of their daily goals.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+![Banner](https://github.com/user-attachments/assets/abe0f31a-e15e-47a0-ba18-29b5f11d5eae)
 
-## Step 1: Start Metro
+---
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+## ✨ Features
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+- ✅ Add, update, and delete tasks
+- 🎯 Mark tasks as complete or pending
+- 👤 User-specific task storage (JWT Auth)
+- 🔒 Task data encryption (optional)
+- 🐾 Cat-themed UI for extra motivation
+- 📱 React Native app (bare CLI workflow)
+- 🌐 Backend with Node.js + MongoDB
 
-```sh
-# Using npm
-npm start
+---
 
-# OR using Yarn
-yarn start
-```
+## 📲 Available on Google Play
 
-## Step 2: Build and run your app
+[![Get it on Google Play](https://upload.wikimedia.org/wikipedia/commons/7/78/Google_Play_Store_badge_EN.svg)](https://play.google.com/store/apps/details?id=com.maxintech.todoapp)  
+> _Click the badge above to download the app!_
 
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
+---
 
-### Android
+## 📸 Screenshots
 
-```sh
-# Using npm
-npm run android
+| Home Screen | Add Task | Login |
+|-------------|----------|-------|
+| ![Home](https://github.com/user-attachments/assets/c6369123-f2ad-486c-92de-9955cccb3640) | ![Add Task](https://github.com/user-attachments/assets/df9ae602-8e34-4f77-8b8c-9d8d1dff3446) | ![Login](https://github.com/user-attachments/assets/2702c1d6-9c6e-4ec1-84fa-210ad3269bf3) |
 
-# OR using Yarn
-yarn android
-```
+---
 
-### iOS
+## 🛠️ Tech Stack
 
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
+**Frontend**: React Native (TypeScript), Redux / Context API  
+**Backend**: Node.js, Express, MongoDB, JWT  
+**Authentication**: Firebase Auth or custom backend auth  
+**Storage**: MongoDB Atlas or local MongoDB  
+**State Management**: Redux Toolkit or Context API
 
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
+---
 
-```sh
-bundle install
-```
+## 🚀 Getting Started
 
-Then, and every time you update your native dependencies, run:
+### Prerequisites
 
-```sh
-bundle exec pod install
-```
+- Node.js
+- MongoDB (local or Atlas)
+- React Native CLI environment
+- Android Studio / Xcode for emulators
 
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
+---
 
-```sh
-# Using npm
-npm run ios
+### Clone and Install
 
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+```bash
+git clone https://github.com/your-username/cat-todo-app.git
+cd cat-todo-app
+npm install
